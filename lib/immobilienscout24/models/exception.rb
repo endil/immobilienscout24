@@ -1,5 +1,5 @@
 module IS24
-  module Errors
+  module Exception
     
     ERROR_IDENTIFIERS = %w(
       ERROR_COMMON_AUTHENTICATION_REQUIRED

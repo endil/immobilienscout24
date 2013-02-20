@@ -1,5 +1,5 @@
 module IS24
-  class Realtor < Api
+  class Me < Api
     
     #
     # Instance Methods
@@ -9,52 +9,60 @@ module IS24
     #
     #
     
-    def initialize(attributes={})
-      @attributes = attributes
+    def info
+      @info ||= get("search/#{IS24.config.api_version}/searcher/me")['searcher.searcher']
     end
     
-    def attributes
-      @attributes
+    def logo
+      @logo ||= get("offer/#{IS24.config.api_version}/realtor/#{id}/logo")['common.realtorLogo']
+    end
+    
+    def logo_url
+      @logo_url ||= logo['realtorLogoUrl']
     end
     
     def id
-      @id ||= @attributes['@id']
+      @id ||= info['@id']
     end
     
-    def company
-      @company ||= contact_details['company']
+    def peid
+      @peid ||= info['@peid']
+    end
+    
+    def contact_details
+      @contact_details ||= info['contactDetails']
     end
     
     def salutation
-      @salutation ||= @attributes['salutation']
+      @salutation ||= contact_details['salutation']
     end
     
-    def firstname
-      @firstname ||= @attributes['firstname']
+    def first_name
+      @first_name ||= contact_details['firstname']
     end
     
-    def lastname
-      @lastname ||= @attributes['lastname']
-    end
-    
-    def phone
-      @fax ||= contact_details['phoneNumber']
-    end
-
-    def fax
-      @fax ||= @attributes['faxNumber']
-    end
-    
-    def mobile
-      @mobile ||= @attributes['cellPhoneNumber']
-    end
-    
-    def url
-      @url ||= contact_details['homepageUrl']
+    def last_name
+      @last_name ||= contact_details['lastname']
     end
     
     def address
-      @address ||= @attributes['address']
+      @address ||= contact_details['address']
+    end
+    
+    def phone
+      @phone ||= contact_details['phoneNumber']
+    end
+    
+    def fax
+      @fax ||= contact_details['faxNumber']
+    end
+    
+    def mobile
+      @mobile ||= contact_details['cellPhoneNumber']
+    end
+
+    def url
+      @url ||= contact_details['homepageUrl']
     end
     
     def street
@@ -74,13 +82,9 @@ module IS24
     end
     
     def country_code
-      @country_code ||= address['countryCode']
+      @country_code ||= contact_details['countryCode']
     end
     
-    def logo_url
-      @logo_url ||= address['realtorLogo']
-    end
-
     #
     # Protected
     # ---------------------------------------------------------------------------------------
@@ -88,7 +92,7 @@ module IS24
     #
     #
     # 
-    
+
     protected
 
     #

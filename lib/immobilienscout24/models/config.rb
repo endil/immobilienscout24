@@ -9,12 +9,16 @@ module IS24
     attr_writer :oauth_request_token_path
     attr_writer :oauth_access_token_path
     attr_writer :oauth_authorize_path
+    attr_writer :always_request_full_expose
+    attr_writer :max_search_results
     
     def initialize # :nodoc:
       self.oauth_site = 'https://rest.immobilienscout24.de'
       self.oauth_request_token_path = '/restapi/security/oauth/request_token'
       self.oauth_access_token_path = '/restapi/security/oauth/access_token'
       self.oauth_authorize_path = '/restapi/security/oauth/confirm_access'
+      self.max_search_results = 200
+      self.always_request_full_expose = false
     end
     
     def api_version
@@ -43,6 +47,14 @@ module IS24
     
     def oauth_authorize_path #:nodoc:
       @oauth_authorize_path
+    end
+    
+    def always_request_full_expose
+      @always_request_full_expose
+    end
+    
+    def max_search_results
+      @max_search_results
     end
     
   end
