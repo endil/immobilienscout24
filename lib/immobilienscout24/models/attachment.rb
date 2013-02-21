@@ -20,25 +20,35 @@ module IS24
     def id
       @id ||= @attributes['@id']
     end
-
-    def type
-      @type ||= "#{@attributes['@xsi.type']}".split(':').last
-    end
     
     def created_at
-      @created_at ||= Time.parse(@attributes['@creationDate'])
+      return Time.parse(@attributes['@creationDate']) if @attributes['@creationDate'].present?
+      return Time.parse(@attributes['@creation']) if @attributes['@creation'].present?
     end
     
     def updated_at
-      @updated_at ||= Time.parse(@attributes['@lastModificationDate'])
+      return Time.parse(@attributes['@lastModificationDate']) if @attributes['@lastModificationDate'].present?
+      return Time.parse(@attributes['@modification']) if @attributes['@modification'].present?
+    end
+    
+    def published_at
+      @published_at ||= Time.parse(@attributes['@publishDate']) if @attributes['@publishDate'].present?
+    end
+
+    def media_type
+      @media_type ||= "#{@attributes['@xsi.type']}".split(':').last
     end
     
     def picture?
-      type == 'Picture'
+      media_type == 'Picture'
     end
     
     def video?
-      type == 'VideoFile'
+      %w(StreamingVideo VideoFile).include?(media_type)
+    end
+    
+    def pdf?
+      media_type == 'PDFDocument'
     end
     
     def href
@@ -53,6 +63,14 @@ module IS24
       @floorplan ||= @attributes['floorplan']
     end
     
+    def title_picture
+      @title_picture ||= @attributes['titlePicture']
+    end
+    
+    def original_picture_url
+      @original_picture_url = "#{versions.first[:href]}".split('/ORIG').first if versions.any?
+    end
+    
     def versions
       if @attributes['urls'].present? && @attributes['urls'].any?
         @versions ||= @attributes['urls'].first['url'].collect do |version|
@@ -62,7 +80,13 @@ module IS24
     end
     
     def url
-      @url ||= @attributes['url']
+      return original_picture_url if picture?
+      return video_id if video?
+      return @attributes['url']
+    end
+    
+    def video_id
+      @video_id ||= @attributes['videoId']
     end
     
     #

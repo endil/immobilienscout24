@@ -1,5 +1,5 @@
 module IS24
-  class Realtor < Api
+  class Realtor
     
     #
     # Instance Methods

@@ -36,6 +36,11 @@ module IS24
     
     # RealEstateState
     
+    # IS24 API doesn't like: YYYY-MM-DDTHH:MM:SSZ
+    def self.iso8601(time)
+      time.utc.strftime("%Y-%m-%dT%H:%M:%S")
+    end
+    
     #
     # Protected
     # ---------------------------------------------------------------------------------------

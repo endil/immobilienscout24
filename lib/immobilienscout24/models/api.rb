@@ -42,12 +42,35 @@ module IS24
     def get(url, options={})
       url.gsub!('http://rest.immobilienscout24.de/restapi/api/','')
       url.gsub!('https://rest.immobilienscout24.de/restapi/api/','')
-
-      Rails.logger.info '##################################'
-      Rails.logger.info "URL: https://rest.immobilienscout24.de/restapi/api/#{url}\nOptions: #{options.to_query}"
-      Rails.logger.info '##################################'
       
-      decode(access_token.get("/restapi/api/#{url}", headers(options)))
+      if IS24.config.enable_logging
+        request_startet_at = Time.now
+        Rails.logger.info "IS24::Api.get: Startet at #{request_startet_at.iso8601}"
+        
+        if IS24.config.oauth_key.present? && IS24.config.oauth_secret.present?
+          Rails.logger.info "IS24::Api.get: OAuth headers with consumer_key and consumer_secret"
+        else
+          Rails.logger.info "IS24::Api.get: OAuth headers without consumer_key and consumer_secret"
+        end
+        
+        if @token.present? && @secret.present?
+          Rails.logger.info "IS24::Api.get: OAuth headers with access_token and access_secret"
+        else
+          Rails.logger.info "IS24::Api.get: OAuth headers without access_token or access_secret"
+        end
+        
+        Rails.logger.info "IS24::Api.get: Header: #{headers(options)}"
+        Rails.logger.info "IS24::Api.get: Requested: #{IS24.config.oauth_site}/restapi/api/#{url}"
+      end
+      
+      decoded_response = decode(access_token.get("/restapi/api/#{url}", headers(options)))
+      
+      if IS24.config.enable_logging
+        request_finished_at = Time.now
+        Rails.logger.info "IS24::Api.get: Finished at #{request_finished_at.iso8601} in #{((request_finished_at - request_startet_at) * 1000).to_i} milliseconds\n\n"
+      end
+      
+      return decoded_response
     end
     
     def get_pages(url, options={})
@@ -60,7 +83,7 @@ module IS24
         if response['common.strictList']['paging']['pageNumber'] < response['common.strictList']['paging']['numberOfPages'] &&
             response['common.strictList'].present? && response['common.strictList']['paging'].present? &&
             response['common.strictList']['paging']['next'].present? && response['common.strictList']['paging']['next']['@xlink.href'].present?
-          results.concat(get_pages(response['common.strictList']['paging']['next']['@xlink.href'], options, response_object_type))
+          results.concat(get_pages(response['common.strictList']['paging']['next']['@xlink.href'], options))
         end
       else
         results << response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'] if response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'].present?
@@ -68,7 +91,7 @@ module IS24
         if response['resultlist.resultlist']['paging']['pageNumber'] < response['resultlist.resultlist']['paging']['numberOfPages'] &&
             response['resultlist.resultlist'].present? && response['resultlist.resultlist']['paging'].present? &&
             response['resultlist.resultlist']['paging']['next'].present? && response['resultlist.resultlist']['paging']['next']['@xlink.href'].present?
-          results.concat(get_pages(response['resultlist.resultlist']['paging']['next']['@xlink.href'], options, response_object_type))
+          results.concat(get_pages(response['resultlist.resultlist']['paging']['next']['@xlink.href'], options))
         end
       end
       return results

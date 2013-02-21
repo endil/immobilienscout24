@@ -57,7 +57,7 @@ module IS24
     #
     #
     
-    def self.by_id(token, secret, expose_id)
+    def self.by_id(expose_id, token=nil, secret=nil)
       return self.new(IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")['expose.expose'])
     end
     

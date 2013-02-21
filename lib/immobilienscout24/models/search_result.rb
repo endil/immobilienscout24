@@ -26,11 +26,17 @@ module IS24
     end
     
     def created_at
-      @created_at ||= Time.parse(@attributes['@creation'])
+      return Time.parse(@attributes['@creationDate']) if @attributes['@creationDate'].present?
+      return Time.parse(@attributes['@creation']) if @attributes['@creation'].present?
     end
     
     def updated_at
-      @updated_at ||= Time.parse(@attributes['@modification'])
+      return Time.parse(@attributes['@lastModificationDate']) if @attributes['@lastModificationDate'].present?
+      return Time.parse(@attributes['@modification']) if @attributes['@modification'].present?
+    end
+    
+    def published_at
+      @published_at ||= Time.parse(@attributes['@publishDate']) if @attributes['@publishDate'].present?
     end
     
     def href

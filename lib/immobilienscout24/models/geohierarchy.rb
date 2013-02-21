@@ -54,7 +54,7 @@ module IS24
     end
     
     def city_details
-      @city_details ||= @attributes['geoHierarchy']['city'] if @attributes.present?
+      @city_details ||= @attributes['geoHierarchy']['city'] if @attributes.present? && @attributes['geoHierarchy'].present?
     end
     
     def city_name
@@ -66,7 +66,7 @@ module IS24
     end
     
     def quarter_details
-      @quarter_details ||= @attributes['geoHierarchy']['quarter'] if @attributes.present?
+      @quarter_details ||= @attributes['geoHierarchy']['quarter'] if @attributes.present? && @attributes['geoHierarchy'].present?
     end
     
     def quarter_name
@@ -78,7 +78,7 @@ module IS24
     end
     
     def neighbourhood_details
-      @neighbourhood_details ||= @attributes['geoHierarchy']['neighbourhood'] if @attributes.present?
+      @neighbourhood_details ||= @attributes['geoHierarchy']['neighbourhood'] if @attributes.present? && @attributes['geoHierarchy'].present?
     end
     
     def neighbourhood_name

@@ -83,6 +83,10 @@ module IS24
       @videos ||= attachments.select {|attachment| attachment.video?}
     end
     
+    def pdfs
+      @pdfs ||= attachments.select {|attachment| attachment.pdf?}
+    end
+    
     def title_picture
       @title_picture ||= IS24::Attachment.new(@attributes['titlePicture'])
     end
