@@ -7,7 +7,7 @@ This gem is currently under development. It is not production ready yet!
 First add the following line to your application's Gemfile:
 
 ```ruby
-gem 'immobilienscout24', :git => 'git@github.com:endil/immobilienscout24.git'
+gem 'immobilienscout24', :git => 'git://github.com/endil/immobilienscout24.git'
 ```
 
 Execute the ```bundle``` command to install the gem.
