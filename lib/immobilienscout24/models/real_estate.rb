@@ -88,7 +88,7 @@ module IS24
     end
     
     def title_picture
-      @title_picture ||= IS24::Attachment.new(@attributes['titlePicture'])
+      @title_picture ||= IS24::Attachment.new(@attributes['titlePicture']) if @attributes['titlePicture'].present?
     end
     
     def state

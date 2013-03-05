@@ -36,7 +36,7 @@ module IS24
     end
 
     def media_type
-      @media_type ||= "#{@attributes['@xsi.type']}".split(':').last
+      @media_type ||= "#{@attributes['@xsi.type']}".split(':').last if @attributes.present?
     end
     
     def picture?
@@ -82,7 +82,8 @@ module IS24
     def url
       return original_picture_url if picture?
       return video_id if video?
-      return @attributes['url']
+      return @attributes['url'] if @attributes['url'].present?
+      return @attributes['@xlink.href']
     end
     
     def video_id

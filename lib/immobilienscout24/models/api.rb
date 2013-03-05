@@ -86,7 +86,7 @@ module IS24
           results.concat(get_pages(response['common.strictList']['paging']['next']['@xlink.href'], options))
         end
       else
-        results << response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'] if response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'].present?
+        results.concat(response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry']) if response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'].present?
 
         if response['resultlist.resultlist']['paging']['pageNumber'] < response['resultlist.resultlist']['paging']['numberOfPages'] &&
             response['resultlist.resultlist'].present? && response['resultlist.resultlist']['paging'].present? &&

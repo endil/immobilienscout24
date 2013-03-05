@@ -46,7 +46,7 @@ module IS24
     end
     
     def longitude
-      @latitude ||= wgs84Coordinate.present? ? wgs84Coordinate['longitude'] : nil
+      @longitude ||= wgs84Coordinate.present? ? wgs84Coordinate['longitude'] : nil
     end
     
     def geocoded?

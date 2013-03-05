@@ -1,6 +1,9 @@
+# Include external dependencies
+require 'oauth'
+require 'multi_json'
+
 require 'immobilienscout24/version'
 
-# load IS24 models
 require 'immobilienscout24/models/config'
 require 'immobilienscout24/models/exception'
 require 'immobilienscout24/models/helper'
