@@ -36,7 +36,7 @@ module IS24
     end
 
     def media_type
-      @media_type ||= "#{@attributes['@xsi.type']}".split(':').last if @attributes.present?
+      @media_type ||= "#{@attributes['@xsi.type']}".split(':').last
     end
     
     def picture?
