@@ -30,11 +30,13 @@ module IS24
     end
     
     def created_at
+      return Time.parse(@attributes['creationDate']) if @attributes['creationDate'].present?
       return Time.parse(@attributes['@creationDate']) if @attributes['@creationDate'].present?
       return Time.parse(@attributes['@creation']) if @attributes['@creation'].present?
     end
     
     def updated_at
+      return Time.parse(@attributes['lastModificationDate']) if @attributes['lastModificationDate'].present?
       return Time.parse(@attributes['@lastModificationDate']) if @attributes['@lastModificationDate'].present?
       return Time.parse(@attributes['@modification']) if @attributes['@modification'].present?
     end
@@ -68,7 +70,19 @@ module IS24
     end
     
     def attachments
-      @attachments ||= @attributes['attachments'].present? ? @attributes['attachments'].first['attachment'].collect { |attachment| IS24::Attachment.new(attachment) } : Array.new
+      attachments = []
+      if @attributes['attachments'].present?
+        @attributes['attachments'].each do |attachment|
+          if attachment['attachment'].kind_of?(Hash)
+            attachments << IS24::Attachment.new(attachment['attachment'])
+          elsif attachment['attachment'].kind_of?(Array)
+            attachment['attachment'].each do |attachment|
+              attachments << IS24::Attachment.new(attachment)
+            end
+          end
+        end
+      end
+      return attachments
     end
     
     def pictures

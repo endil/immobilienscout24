@@ -76,16 +76,16 @@ module IS24
     def get_pages(url, options={})
       results = Array.new
       response = get(url, options)
-
+      
       if response['common.strictList'].present?
         results << response['common.strictList']['strictEntry'] if response['common.strictList']['strictEntry'].present?
 
         if response['common.strictList']['paging']['pageNumber'] < response['common.strictList']['paging']['numberOfPages'] &&
-            response['common.strictList'].present? && response['common.strictList']['paging'].present? &&
-            response['common.strictList']['paging']['next'].present? && response['common.strictList']['paging']['next']['@xlink.href'].present?
+            response['common.strictList']['paging'].present? && response['common.strictList']['paging']['next'].present? &&
+            response['common.strictList']['paging']['next']['@xlink.href'].present?
           results.concat(get_pages(response['common.strictList']['paging']['next']['@xlink.href'], options))
         end
-      else
+      elsif response['resultlist.resultlist'].present?
         
         number_of_hits = response['resultlist.resultlist']['resultlistEntries'].first['@numberOfHits'].to_i
         if number_of_hits > 1
@@ -95,8 +95,8 @@ module IS24
         end
 
         if response['resultlist.resultlist']['paging']['pageNumber'] < response['resultlist.resultlist']['paging']['numberOfPages'] &&
-            response['resultlist.resultlist'].present? && response['resultlist.resultlist']['paging'].present? &&
-            response['resultlist.resultlist']['paging']['next'].present? && response['resultlist.resultlist']['paging']['next']['@xlink.href'].present?
+            response['resultlist.resultlist']['paging'].present? && response['resultlist.resultlist']['paging']['next'].present? &&
+            response['resultlist.resultlist']['paging']['next']['@xlink.href'].present?
           results.concat(get_pages(response['resultlist.resultlist']['paging']['next']['@xlink.href'], options))
         end
       end

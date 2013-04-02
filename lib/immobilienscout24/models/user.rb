@@ -10,8 +10,8 @@ module IS24
     #
     
     def info
-      realtor = IS24::Realtor.new(@token, @secret)
-      @info ||= get("account/#{IS24.config.api_version}/user?ssoid=#{realtor.peid}")['user.users'].first['user.user']
+      me = IS24::Me.new(@token, @secret)
+      @info ||= get("account/#{IS24.config.api_version}/user?ssoid=#{me.peid}")['user.users'].first['user.user']
     end
     
     def logo

@@ -14,7 +14,7 @@ module IS24
     end
     
     def logo
-      @logo ||= get("offer/#{IS24.config.api_version}/realtor/#{id}/logo")['common.realtorLogo']
+      @logo ||= get("offer/#{IS24.config.api_version}/realtor/me/logo")['common.realtorLogo']
     end
     
     def logo_url
@@ -27,6 +27,14 @@ module IS24
     
     def peid
       @peid ||= info['@peid']
+    end
+    
+    def username
+      id
+    end
+    
+    def customer_number
+      peid
     end
     
     def contact_details
