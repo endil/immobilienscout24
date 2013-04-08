@@ -61,6 +61,30 @@ module IS24
       return self.new(IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")['expose.expose'])
     end
     
+    def self.contact(expose_id, params)
+      # preserve params order!
+      request_body = {
+        'expose.contactForm' => {
+          '@contactFormType' => self.by_id(expose_id).contact_form_type,
+          'firstname' => nil,
+          'lastname' => nil,
+          'phoneNumber' => nil,
+          'appointmentRequested' => nil,
+          'message' => nil,
+          'address' => {
+            '@xsi.type' => 'common:Address',
+            'street' => nil,
+            'houseNumber' => nil,
+            'postcode' => nil,
+            'city' => nil
+          }
+        }.merge(params)
+      }.to_json
+      
+      response = IS24::Api.new.post("search/#{IS24.config.api_version}/expose/#{expose_id}/contact", request_body)
+      return response.code != '200' ? response : true
+    end
+    
     #
     # Protected
     # ---------------------------------------------------------------------------------------

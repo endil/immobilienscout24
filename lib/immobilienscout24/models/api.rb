@@ -39,6 +39,13 @@ module IS24
       { 'Accept' => 'application/json' }.merge(options)
     end
     
+    def post(url, request_body)
+      url = URI.parse("#{IS24.config.oauth_site}/restapi/api/#{url}")
+      request = Net::HTTP::Post.new(url.path, headers({ 'Content-Type' => 'application/json' }))
+      request.body = request_body
+      return Net::HTTP.start(url.host, url.port, :use_ssl => true) { |http| http.request(request) }
+    end
+    
     def get(url, options={})
       url.gsub!('http://rest.immobilienscout24.de/restapi/api/','')
       url.gsub!('https://rest.immobilienscout24.de/restapi/api/','')
@@ -62,7 +69,7 @@ module IS24
         Rails.logger.info "IS24::Api.get: Header: #{headers(options)}"
         Rails.logger.info "IS24::Api.get: Requested: #{IS24.config.oauth_site}/restapi/api/#{url}"
       end
-      
+
       decoded_response = decode(access_token.get("/restapi/api/#{url}", headers(options)))
       
       if IS24.config.enable_logging
