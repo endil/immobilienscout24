@@ -9,97 +9,80 @@ module IS24
     #
     #
     
-    def info
-      me = IS24::Me.new(@token, @secret)
-      @info ||= get("account/#{IS24.config.api_version}/user?ssoid=#{me.peid}")['user.users'].first['user.user']
+    def initialize(attributes={})
+      @attributes = attributes
     end
     
-    def logo
-      @logo ||= get("offer/#{IS24.config.api_version}/realtor/#{username}/logo")['common.realtorLogo']
-    end
-    
-    def logo_url
-      @logo_url ||= logo['realtorLogoUrl']
-    end
-    
-    def id
-      @id ||= info['user.ssoid']
-    end
-    
-    def customer_number
-      @customer_number ||= info['user.customerNumber']
-    end
-    
-    def user_details
-      @user_details ||= info['user.user']
+    def attributes
+      @attributes
     end
 
     def username
-      @username ||= info['user.userName']
-    end
-    
-    def contact_details
-      @contact_details ||= info['user.userContactDetails']
-    end
-    
-    def company
-      @company ||= contact_details['company']
-    end
-    
-    def salutation
-      @salutation ||= contact_details['salutation']
-    end
-    
-    def first_name
-      @first_name ||= contact_details['firstname']
-    end
-    
-    def last_name
-      @last_name ||= contact_details['lastname']
-    end
-    
-    def address
-      @address ||= contact_details['address']
-    end
-    
-    def email
-      @email ||= contact_details['email']
-    end
-    
-    def phone
-      @phone ||= contact_details['phoneNumber']
-    end
-    
-    def fax
-      @fax ||= contact_details['faxNumber']
-    end
-    
-    def mobile
-      @mobile ||= contact_details['cellPhoneNumber']
+      @username ||= @attributes['user.userName']
     end
 
-    def url
-      @url ||= contact_details['homepageUrl']
+    def contact_details
+      @contact_details ||= Contact.new(@attributes['user.userContactDetails'])
+    end
+
+    def company_wide_id
+      @company_wide_id ||= @attributes['user.companyWideId']
     end
     
-    def street
-      @street ||= address['street']
+    def user_state
+      @user_state ||= @attributes['user.userState']
     end
     
-    def house_number
-      @house_number ||= address['houseNumber']
+    def sso_id
+      @sso_id ||= @attributes['user.ssoid']
     end
     
-    def postcode
-      @postcode ||= address['postcode']
+    def customer_number
+      @customer_number ||= @attributes['user.customerNumber']
     end
     
-    def city
-      @city ||= address['city']
+    def customer_company_wide_id
+      @customer_company_wide_id ||= @attributes['user.customerCompanyWideId']
     end
     
-    def country_code
-      @country_code ||= contact_details['countryCode']
+    def internal_test
+      @internal_test ||= @attributes['user.internalTest']
+    end
+
+    def logo_url
+      @logo_url ||= get("offer/#{IS24.config.api_version}/realtor/#{username}/logo")['common.realtorLogo']['realtorLogoUrl']
+    end
+
+    #
+    # Class Methods
+    # ---------------------------------------------------------------------------------------
+    #
+    #
+    #
+    #
+    
+    def self.query(attribute_name, attribute_value)
+      return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/user?#{attribute_name}=#{attribute_value}")['user.user'])
+    end
+    
+    def self.by_username(username)
+      return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/user/#{username}")['user.user'])
+    end
+    
+    def self.by_sso_id(value)
+      self.query('ssoid', value)
+    end
+    
+    def self.by_address_id(value)
+      self.query('addressid', value)
+    end
+    
+    def self.by_business_address_id(value)
+      self.query('businessaddressid', value)
+    end
+    
+    def self.by_email(value)
+      self.query('email', value)
     end
     
     #

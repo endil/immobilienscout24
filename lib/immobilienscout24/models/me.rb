@@ -34,63 +34,11 @@ module IS24
     end
     
     def customer_number
-      peid
+      id
     end
     
     def contact_details
-      @contact_details ||= info['contactDetails']
-    end
-    
-    def salutation
-      @salutation ||= contact_details['salutation']
-    end
-    
-    def first_name
-      @first_name ||= contact_details['firstname']
-    end
-    
-    def last_name
-      @last_name ||= contact_details['lastname']
-    end
-    
-    def address
-      @address ||= contact_details['address']
-    end
-    
-    def phone
-      @phone ||= contact_details['phoneNumber']
-    end
-    
-    def fax
-      @fax ||= contact_details['faxNumber']
-    end
-    
-    def mobile
-      @mobile ||= contact_details['cellPhoneNumber']
-    end
-
-    def url
-      @url ||= contact_details['homepageUrl']
-    end
-    
-    def street
-      @street ||= address['street']
-    end
-    
-    def house_number
-      @house_number ||= address['houseNumber']
-    end
-    
-    def postcode
-      @postcode ||= address['postcode']
-    end
-    
-    def city
-      @city ||= address['city']
-    end
-    
-    def country_code
-      @country_code ||= contact_details['countryCode']
+      @contact_details ||= Contact.new(info['contactDetails'])
     end
     
     #

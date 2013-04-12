@@ -46,11 +46,7 @@ module IS24
     end
     
     def address
-      @address ||= IS24::Address.new(@attributes['address'])
-    end
-    
-    def contact_form_type
-      @contact_form_type ||= @attributes['@contactFormType']
+      @address ||= IS24::Address.new(@attributes['address']) if @attributes['address'].present?
     end
     
     def group_number

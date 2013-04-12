@@ -10,11 +10,13 @@ require 'immobilienscout24/models/helper'
 require 'immobilienscout24/models/api'
 
 require 'immobilienscout24/models/me'
+require 'immobilienscout24/models/customer'
 require 'immobilienscout24/models/user'
 require 'immobilienscout24/models/realtor'
 
 require 'immobilienscout24/models/attachment'
 require 'immobilienscout24/models/address'
+require 'immobilienscout24/models/contact'
 require 'immobilienscout24/models/geohierarchy'
 require 'immobilienscout24/models/expose'
 require 'immobilienscout24/models/real_estate'
