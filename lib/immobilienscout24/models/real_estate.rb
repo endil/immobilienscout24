@@ -277,6 +277,7 @@ module IS24
       @courtage_note ||= courtage_details['courtageNote'] if courtage_details.present?
     end
     
+    # Price
     def price_details
       @price_details ||= @attributes['price']
     end
@@ -297,6 +298,7 @@ module IS24
       @price_price_interval_type ||= price_details['priceIntervalType'] if price_details.present?
     end
     
+    # Calculated price
     def calculated_price_details
       @calculated_price_details ||= @attributes['calculatedPrice']
     end
@@ -319,6 +321,96 @@ module IS24
     
     def calculated_price_rent_scope
       @calculated_price_rent_scope ||= calculated_price_details['rentScope'] if calculated_price_details.present?
+    end
+    
+    # Market value
+    def market_value_details
+      @market_value_details ||= @attributes['marketValue']
+    end
+    
+    def market_value
+      @market_value ||= market_value_details['value'] if market_value_details.present?
+    end
+    
+    def market_value_currency
+      @market_value_currency ||= market_value_details['currency'] if market_value_details.present?
+    end
+    
+    def market_value_marketing_type
+      @market_value_marketing_type ||= market_value_details['marketingType'] if market_value_details.present?
+    end
+    
+    def market_value_price_interval_type
+      @market_value_price_interval_type ||= market_value_details['priceIntervalType'] if market_value_details.present?
+    end
+    
+    def market_value_rent_scope
+      @market_value_rent_scope ||= market_value_details['rentScope'] if market_value_details.present?
+    end
+    
+    # Net rent
+    def net_rent_details
+      @net_rent_details ||= @attributes['marketValue']
+    end
+    
+    def net_rent
+      @net_rent ||= net_rent_details['value'] if net_rent_details.present?
+    end
+    
+    def net_rent_currency
+      @net_rent_currency ||= net_rent_details['currency'] if net_rent_details.present?
+    end
+    
+    def net_rent_marketing_type
+      @net_rent_marketing_type ||= net_rent_details['marketingType'] if net_rent_details.present?
+    end
+    
+    def net_rent_price_interval_type
+      @net_rent_price_interval_type ||= net_rent_details['priceIntervalType'] if net_rent_details.present?
+    end
+    
+    def net_rent_rent_scope
+      @net_rent_rent_scope ||= net_rent_details['rentScope'] if net_rent_details.present?
+    end
+    
+    # Marketing price
+    def marketing_price_details
+      @marketing_price_details ||= @attributes['marketingPrice']
+    end
+    
+    def marketing_price
+      @marketing_price ||= marketing_price_details['value'] if marketing_price_details.present?
+    end
+    
+    def marketing_price_currency
+      @marketing_price_currency ||= marketing_price_details['currency'] if marketing_price_details.present?
+    end
+    
+    def marketing_price_marketing_type
+      @marketing_price_marketing_type ||= marketing_price_details['marketingType'] if marketing_price_details.present?
+    end
+    
+    def marketing_price_price_interval_type
+      @marketing_price_price_interval_type ||= marketing_price_details['priceIntervalType'] if marketing_price_details.present?
+    end
+    
+    def marketing_price_rent_scope
+      @marketing_price_rent_scope ||= marketing_price_details['rentScope'] if marketing_price_details.present?
+    end
+    
+    def visible_price
+      case type
+      when 'AppartmentRent', 'AppartmentBuy', 'SeniorCare', 'HouseRent', 'HouseBuy', 'SiteLivingBuy', 'SiteLivingRent', 'GarageRent', 'GarageBuy', 'HouseType'
+        return price
+      when 'SiteTrade', 'Office', 'Gastronomy', 'Investment', 'Industry', 'Store'
+        return marketing_price
+      when 'FlatShareRoom'
+        return net_rent
+      when 'AssistedLiving'
+        return nil
+      when 'CompulsoryAuction'
+        return market_value
+      end
     end
     
     #
