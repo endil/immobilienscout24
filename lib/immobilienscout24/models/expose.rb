@@ -22,11 +22,11 @@ module IS24
     end
     
     def created_at
-      @created_at ||= Time.parse(@attributes['@creation'])
+      @created_at ||= Time.parse(@attributes['@creation']).utc
     end
     
     def updated_at
-      @updated_at ||= Time.parse(@attributes['@modification'])
+      @updated_at ||= Time.parse(@attributes['@modification']).utc
     end
     
     def href
