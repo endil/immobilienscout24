@@ -49,6 +49,18 @@ module IS24
       @realtor ||= IS24::Realtor.new(@attributes['contactDetails'])
     end
     
+    def offline?
+      response = Net::HTTP.get_response(URI.parse("http://www.immobilienscout24.de/expose/#{id}"))
+      case response.code
+      when '200'
+        return false
+      when '302'
+        return response['location'].ends_with?('objekt-nicht-gefunden.jsp')
+      when '404'
+        return true
+      end
+    end
+    
     #
     # Class Methods
     # ---------------------------------------------------------------------------------------
