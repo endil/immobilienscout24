@@ -49,6 +49,7 @@ module IS24
       @realtor ||= IS24::Realtor.new(@attributes['contactDetails'])
     end
     
+    # Change to usage of: http://developerwiki.immobilienscout24.de/wiki/Header#ETag
     def offline?
       response = Net::HTTP.get_response(URI.parse("http://www.immobilienscout24.de/expose/#{id}"))
       case response.code

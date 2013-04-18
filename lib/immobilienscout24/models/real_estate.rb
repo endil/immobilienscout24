@@ -398,11 +398,21 @@ module IS24
       @marketing_price_rent_scope ||= marketing_price_details['rentScope'] if marketing_price_details.present?
     end
     
+    def total_rent
+      @total_rent ||= @attributes['totalRent']
+    end
+    
+    def net_floor_space
+      @net_floor_space ||= @attributes['netFloorSpace']
+    end
+    
+    def plot_area
+      @plot_area ||= @attributes['plotArea']
+    end
+    
     def visible_price
       case type
-      when 'AppartmentRent', 'AppartmentBuy', 'SeniorCare', 'HouseRent', 'HouseBuy', 'SiteLivingBuy', 'SiteLivingRent', 'GarageRent', 'GarageBuy', 'HouseType'
-        return price
-      when 'SiteTrade', 'Office', 'Gastronomy', 'Investment', 'Industry', 'Store'
+      when 'SiteTrade', 'Investment'
         return marketing_price
       when 'FlatShareRoom'
         return net_rent
@@ -410,6 +420,21 @@ module IS24
         return nil
       when 'CompulsoryAuction'
         return market_value
+      when 'ApartmentRent', 'HouseRent'
+        return base_rent
+      else
+        return price
+      end
+    end
+    
+    def visible_space
+      case type
+      when 'Office', 'Industry', 'Store', 'Gastronomy', 'SpecialPurpose'
+        return net_floor_space
+      when 'LivingBuySite', 'TradeSite'
+        return plot_area
+      else
+        return living_space
       end
     end
     
