@@ -60,6 +60,8 @@ module IS24
       when '404'
         return true
       end
+    rescue EOFError
+      return true
     end
     
     #
