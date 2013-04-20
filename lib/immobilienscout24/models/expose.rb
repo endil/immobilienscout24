@@ -62,6 +62,8 @@ module IS24
       end
     rescue EOFError
       return true
+    rescue Timeout::Error, Errno::ECONNRESET, Errno::ECONNREFUSED
+      return false
     end
     
     #
