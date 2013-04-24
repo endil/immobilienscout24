@@ -47,6 +47,13 @@ module IS24
     end
     
     def get(url, options={})
+      decoded_response = decode(get_request(url, options={}))
+      return decoded_response
+    end
+    
+    def get_request(url, options={})
+      url.gsub!('http://rest.immobilienscout24.de/restapi/api/','')
+      url.gsub!('https://rest.immobilienscout24.de/restapi/api/','')
       if IS24.config.enable_logging
         request_startet_at = Time.now
         Rails.logger.info "IS24::Api.get: Startet at #{request_startet_at.iso8601}"
@@ -66,21 +73,15 @@ module IS24
         Rails.logger.info "IS24::Api.get: Header: #{headers(options)}"
         Rails.logger.info "IS24::Api.get: Requested: #{IS24.config.oauth_site}/restapi/api/#{url}"
       end
-
-      decoded_response = decode(get_request(url, options={}))
       
+      response = access_token.get(URI.escape("/restapi/api/#{url}", ' '), headers(options))
+
       if IS24.config.enable_logging
         request_finished_at = Time.now
         Rails.logger.info "IS24::Api.get: Finished at #{request_finished_at.iso8601} in #{((request_finished_at - request_startet_at) * 1000).to_i} milliseconds\n\n"
       end
       
-      return decoded_response
-    end
-    
-    def get_request(url, options={})
-      url.gsub!('http://rest.immobilienscout24.de/restapi/api/','')
-      url.gsub!('https://rest.immobilienscout24.de/restapi/api/','')
-      access_token.get(URI.escape("/restapi/api/#{url}", ' '), headers(options))
+      return response
     end
     
     def get_pages(url, options={})
