@@ -22,7 +22,7 @@ module IS24
     end
     
     def company
-      @company ||= contact_details['company']
+      @company ||= @attributes['company']
     end
     
     def salutation
@@ -38,7 +38,7 @@ module IS24
     end
     
     def phone
-      @fax ||= contact_details['phoneNumber']
+      @phone ||= @attributes['phoneNumber']
     end
 
     def fax
@@ -50,9 +50,17 @@ module IS24
     end
     
     def url
-      @url ||= contact_details['homepageUrl']
+      @url ||= @attributes['homepageUrl']
     end
     
+    def country_code
+      @country_code ||= @attributes['countryCode']
+    end
+    
+    def logo_url
+      @logo_url ||= @attributes['realtorLogo']
+    end
+
     def address
       @address ||= @attributes['address']
     end
@@ -72,15 +80,6 @@ module IS24
     def city
       @city ||= address['city']
     end
-    
-    def country_code
-      @country_code ||= address['countryCode']
-    end
-    
-    def logo_url
-      @logo_url ||= address['realtorLogo']
-    end
-
     #
     # Protected
     # ---------------------------------------------------------------------------------------
