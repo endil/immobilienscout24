@@ -22,7 +22,8 @@ module IS24
     end
     
     def type
-      @type ||= "#{@attributes['@xsi.type']}".split(':').last
+      type = "#{@attributes['@xsi.type']}".split(':').last
+      @type ||= (type == 'InvestmentProperty' ? 'Investment' : type)
     end
     
     def title
