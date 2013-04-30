@@ -49,23 +49,6 @@ module IS24
       @realtor ||= IS24::Realtor.new(@attributes['contactDetails'])
     end
     
-    # Change to usage of: http://developerwiki.immobilienscout24.de/wiki/Header#ETag
-    def offline?
-      response = Net::HTTP.get_response(URI.parse("http://www.immobilienscout24.de/expose/#{id}"))
-      case response.code
-      when '200'
-        return false
-      when '302'
-        return response['location'].ends_with?('objekt-nicht-gefunden.jsp')
-      when '404'
-        return true
-      end
-    rescue EOFError
-      return true
-    rescue Timeout::Error, Errno::ECONNRESET, Errno::ECONNREFUSED
-      return false
-    end
-    
     #
     # Class Methods
     # ---------------------------------------------------------------------------------------
@@ -73,6 +56,36 @@ module IS24
     #
     #
     #
+    
+    def self.offline?(id)
+      begin
+        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}", { 'If-None-Match' => '' })
+        case response.code
+        when '200', '304'
+          return false
+        when '404'
+          return true
+        end
+      rescue IS24::Exception::ResourceNotFound
+        return true
+      end
+    end
+    
+    def self.modified?(id, etag=nil)
+      begin
+        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}", { 'If-None-Match' => "#{etag}" })
+        case response.code
+        when '200' # modified
+          return { :expose => IS24::Expose.new(IS24::Api.new.decode(response)['expose.expose']), :etag => response.header['etag'].gsub("\"", '') }
+        when '304' # not modified
+          return false
+        when '404' # not found
+          return nil
+        end
+      rescue IS24::Exception::ResourceNotFound
+        return nil
+      end
+    end
     
     def self.by_id(expose_id, token=nil, secret=nil)
       return self.new(IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")['expose.expose'])
