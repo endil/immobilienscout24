@@ -91,7 +91,7 @@ module IS24
       if response['common.strictList'].present?
         results << response['common.strictList']['strictEntry'] if response['common.strictList']['strictEntry'].present?
 
-        if response['common.strictList']['paging']['pageNumber'] < response['common.strictList']['paging']['numberOfPages'] &&
+        if response['common.strictList']['paging']['pageNumber'].to_i < response['common.strictList']['paging']['numberOfPages'].to_i &&
             response['common.strictList']['paging'].present? && response['common.strictList']['paging']['next'].present? &&
             response['common.strictList']['paging']['next']['@xlink.href'].present?
           results.concat(get_pages(response['common.strictList']['paging']['next']['@xlink.href'], options))
@@ -104,8 +104,8 @@ module IS24
         elsif number_of_hits == 1
           results << response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry']
         end
-
-        if response['resultlist.resultlist']['paging']['pageNumber'] < response['resultlist.resultlist']['paging']['numberOfPages'] &&
+        
+        if response['resultlist.resultlist']['paging']['pageNumber'].to_i < response['resultlist.resultlist']['paging']['numberOfPages'].to_i &&
             response['resultlist.resultlist']['paging'].present? && response['resultlist.resultlist']['paging']['next'].present? &&
             response['resultlist.resultlist']['paging']['next']['@xlink.href'].present?
           results.concat(get_pages(response['resultlist.resultlist']['paging']['next']['@xlink.href'], options))
