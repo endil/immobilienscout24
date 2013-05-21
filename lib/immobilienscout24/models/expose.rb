@@ -99,6 +99,7 @@ module IS24
           'firstname' => nil,
           'lastname' => nil,
           'phoneNumber' => nil,
+          'emailAddress' => nil,
           'appointmentRequested' => nil,
           'message' => nil,
           'address' => {
@@ -109,9 +110,13 @@ module IS24
             'city' => nil
           }
         }.merge(params)
-      }.to_json
+      }
       
-      response = IS24::Api.new.post("search/#{IS24.config.api_version}/expose/#{expose_id}/contact", request_body)
+      request_body['expose.contactForm']['address'].delete_if { |k, v| v.nil? }
+      request_body['expose.contactForm']['address'] = nil if request_body['expose.contactForm']['address'].empty?
+      request_body['expose.contactForm'].delete_if { |k, v| v.nil? }
+      
+      response = IS24::Api.new.post("search/#{IS24.config.api_version}/expose/#{expose_id}/contact", request_body.to_json)
       return response.code != '200' ? response : true
     end
     
