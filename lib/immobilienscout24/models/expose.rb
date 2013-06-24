@@ -74,8 +74,13 @@ module IS24
     def self.modified?(id, etag=nil)
       begin
         response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}", { 'If-None-Match' => "#{etag}" })
+        return false if response.body.nil? || response.body == ""
+
         case response.code
         when '200' # modified
+          if IS24::Api.new.decode(response).nil? || response.header.nil?
+            raise response.inspect
+          end
           return { :expose => IS24::Expose.new(IS24::Api.new.decode(response)['expose.expose']), :etag => response.header['etag'].gsub("\"", '') }
         when '304' # not modified
           return false
