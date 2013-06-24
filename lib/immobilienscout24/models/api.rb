@@ -87,6 +87,7 @@ module IS24
     def get_pages(url, options={})
       results = Array.new
       response = get(url, options)
+      return results if response.nil? || response == ''
       
       if response['common.strictList'].present?
         results << response['common.strictList']['strictEntry'] if response['common.strictList']['strictEntry'].present?
