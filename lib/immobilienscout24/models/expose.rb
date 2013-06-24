@@ -78,9 +78,6 @@ module IS24
 
         case response.code
         when '200' # modified
-          if IS24::Api.new.decode(response).nil? || response.header.nil?
-            raise response.inspect
-          end
           return { :expose => IS24::Expose.new(IS24::Api.new.decode(response)['expose.expose']), :etag => response.header['etag'].gsub("\"", '') }
         when '304' # not modified
           return false
@@ -93,7 +90,12 @@ module IS24
     end
     
     def self.by_id(expose_id, token=nil, secret=nil)
-      return self.new(IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")['expose.expose'])
+      response = IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")
+      if response.present?
+        return self.new(respone['expose.expose'])
+      else
+        return nil
+      end
     end
     
     def self.contact(expose_id, params)
