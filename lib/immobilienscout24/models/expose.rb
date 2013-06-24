@@ -92,7 +92,7 @@ module IS24
     def self.by_id(expose_id, token=nil, secret=nil)
       response = IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")
       if response.present?
-        return self.new(respone['expose.expose'])
+        return self.new(response['expose.expose'])
       else
         return nil
       end
