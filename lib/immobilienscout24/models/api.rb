@@ -100,10 +100,11 @@ module IS24
       elsif response['resultlist.resultlist'].present?
         
         number_of_hits = response['resultlist.resultlist']['resultlistEntries'].first['@numberOfHits'].to_i
-        if number_of_hits > 1
-          results.concat(response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry'])
+        request_results = response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry']
+        if number_of_hits > 1 && request_results.kind_of?(Array)
+          results.concat(request_results)
         elsif number_of_hits == 1
-          results << response['resultlist.resultlist']['resultlistEntries'].first['resultlistEntry']
+          results << request_results
         end
         
         if response['resultlist.resultlist']['paging']['pageNumber'].to_i < response['resultlist.resultlist']['paging']['numberOfPages'].to_i &&
