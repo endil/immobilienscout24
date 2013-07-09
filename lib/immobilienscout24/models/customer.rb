@@ -62,11 +62,13 @@ module IS24
     #
     
     def self.query(attribute_name, attribute_value)
-      return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/customer?#{attribute_name}=#{attribute_value}")['customer.customer'])
+      response IS24::Api.new.get("account/#{IS24.config.api_version}/customer?#{attribute_name}=#{attribute_value}")
+      return response.present? ? self.new(response['customer.customer']) : nil
     end
     
     def self.by_customer_number(customer_number)
-      return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/customer/#{customer_number}")['customer.customer'])
+      response = IS24::Api.new.get("account/#{IS24.config.api_version}/customer/#{customer_number}")
+      return response.present? ? self.new(response['customer.customer']) : nil
     end
     
     def self.by_realtor_id(value)
