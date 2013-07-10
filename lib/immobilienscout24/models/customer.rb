@@ -62,7 +62,7 @@ module IS24
     #
     
     def self.query(attribute_name, attribute_value)
-      response IS24::Api.new.get("account/#{IS24.config.api_version}/customer?#{attribute_name}=#{attribute_value}")
+      response = IS24::Api.new.get("account/#{IS24.config.api_version}/customer?#{attribute_name}=#{attribute_value}")
       return response.present? ? self.new(response['customer.customer']) : nil
     end
     
