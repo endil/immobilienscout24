@@ -98,11 +98,11 @@ module IS24
       end
     end
     
-    def self.contact(expose_id, params)
+    def self.contact(expose_id, contact_form_type, params)
       # preserve params order!
       request_body = {
         'expose.contactForm' => {
-          '@contactFormType' => self.by_id(expose_id).contact_form_type,
+          '@contactFormType' => contact_form_type,
           'firstname' => nil,
           'lastname' => nil,
           'phoneNumber' => nil,
