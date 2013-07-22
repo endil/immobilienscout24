@@ -10,6 +10,7 @@ module IS24
     attr_writer :oauth_access_token_path
     attr_writer :oauth_authorize_path
     attr_writer :enable_logging
+    attr_writer :enable_debugging
     attr_writer :default_search_options
     attr_writer :default_radius_search_options
     attr_writer :default_region_search_options
@@ -21,6 +22,7 @@ module IS24
       self.oauth_access_token_path = '/restapi/security/oauth/access_token'
       self.oauth_authorize_path = '/restapi/security/oauth/confirm_access'
       self.enable_logging = false
+      self.enable_debugging = false
       self.default_search_options = {}
       self.default_radius_search_options = {}
       self.default_region_search_options = {}
@@ -57,6 +59,10 @@ module IS24
     
     def enable_logging
       @enable_logging
+    end
+    
+    def enable_debugging
+      @enable_debugging
     end
     
     def default_search_options

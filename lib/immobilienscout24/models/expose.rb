@@ -123,16 +123,7 @@ module IS24
       request_body['expose.contactForm']['address'] = nil if request_body['expose.contactForm']['address'].empty?
       request_body['expose.contactForm'].delete_if { |k, v| v.nil? }
       
-      Rails.logger.info '##################################'
-      Rails.logger.info request_body.to_json
-      Rails.logger.info '##################################'
-      
       response = IS24::Api.new.post("search/#{IS24.config.api_version}/expose/#{expose_id}/contact", request_body.to_json)
-      
-      Rails.logger.info '##################################'
-      Rails.logger.info response.inspect
-      Rails.logger.info '##################################'
-      
       return response.code != '200' ? response : true
     end
     

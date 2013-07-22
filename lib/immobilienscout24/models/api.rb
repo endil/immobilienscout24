@@ -24,6 +24,7 @@ module IS24
     end
 
     def access_token
+      consumer.http.set_debug_output($stdout) if IS24.config.enable_debugging
       @access_token ||= ::OAuth::AccessToken.new(consumer, @token, @secret)
     end
     
@@ -40,10 +41,22 @@ module IS24
     end
     
     def post(url, request_body)
-      url = URI.parse("#{IS24.config.oauth_site}/restapi/api/#{url}")
-      request = Net::HTTP::Post.new(url.path, headers({ 'Content-Type' => 'application/json' }))
-      request.body = request_body
-      return Net::HTTP.start(url.host, url.port, :use_ssl => true) { |http| http.request(request) }
+      if IS24.config.enable_logging
+        request_startet_at = Time.now
+        Rails.logger.info "IS24::Api.post: Startet at #{request_startet_at.iso8601}"
+        
+        Rails.logger.info "IS24::Api.post: Body: #{request_body}"
+        Rails.logger.info "IS24::Api.post: Requested: #{IS24.config.oauth_site}/restapi/api/#{url}"
+      end
+
+      response = access_token.post(URI.escape("/restapi/api/#{url}", ' '), request_body, { 'Content-Type' => 'application/json' })
+      
+      if IS24.config.enable_logging
+        request_finished_at = Time.now
+        Rails.logger.info "IS24::Api.post: Finished at #{request_finished_at.iso8601} in #{((request_finished_at - request_startet_at) * 1000).to_i} milliseconds\n\n"
+      end
+      
+      return response
     end
     
     def get(url, options={})
