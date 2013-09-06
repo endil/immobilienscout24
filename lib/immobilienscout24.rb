@@ -19,19 +19,20 @@ require 'immobilienscout24/models/address'
 require 'immobilienscout24/models/contact'
 require 'immobilienscout24/models/geohierarchy'
 require 'immobilienscout24/models/expose'
+require 'immobilienscout24/models/evaluation'
 require 'immobilienscout24/models/real_estate'
 require 'immobilienscout24/models/search_result'
 require 'immobilienscout24/models/search'
 
 module IS24
-  
+
   def self.configure(configuration = IS24::Config.new)
     yield configuration if block_given?
     @@configuration = configuration
   end
-      
+
   def self.config
     @@configuration ||= IS24::Config.new
   end
-  
+
 end

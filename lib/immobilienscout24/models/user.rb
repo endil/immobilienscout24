@@ -1,6 +1,6 @@
 module IS24
   class User < Api
-    
+
     #
     # Instance Methods
     # ---------------------------------------------------------------------------------------
@@ -8,11 +8,11 @@ module IS24
     #
     #
     #
-    
+
     def initialize(attributes={})
       @attributes = attributes
     end
-    
+
     def attributes
       @attributes
     end
@@ -28,23 +28,23 @@ module IS24
     def company_wide_id
       @company_wide_id ||= @attributes['user.companyWideId']
     end
-    
+
     def user_state
       @user_state ||= @attributes['user.userState']
     end
-    
+
     def sso_id
       @sso_id ||= @attributes['user.ssoid']
     end
-    
+
     def customer_number
       @customer_number ||= @attributes['user.customerNumber']
     end
-    
+
     def customer_company_wide_id
       @customer_company_wide_id ||= @attributes['user.customerCompanyWideId']
     end
-    
+
     def internal_test
       @internal_test ||= @attributes['user.internalTest']
     end
@@ -60,38 +60,38 @@ module IS24
     #
     #
     #
-    
+
     def self.query(attribute_name, attribute_value)
       return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/user?#{attribute_name}=#{attribute_value}")['user.user'])
     end
-    
+
     def self.by_username(username)
       return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/user/#{username}")['user.user'])
     end
-    
+
     def self.by_sso_id(value)
       self.query('ssoid', value)
     end
-    
+
     def self.by_address_id(value)
       self.query('addressid', value)
     end
-    
+
     def self.by_business_address_id(value)
       self.query('businessaddressid', value)
     end
-    
+
     def self.by_email(value)
       self.query('email', value)
     end
-    
+
     #
     # Protected
     # ---------------------------------------------------------------------------------------
     #
     #
     #
-    # 
+    #
 
     protected
 
@@ -101,9 +101,9 @@ module IS24
     #
     #
     #
-    # 
+    #
 
     private
-    
+
   end
 end
