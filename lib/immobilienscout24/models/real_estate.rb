@@ -418,7 +418,7 @@ module IS24
     def visible_price
       case type
       when 'SiteTrade', 'Investment'
-        return marketing_price
+        return marketing_price.present? ? marketing_price : price
       when 'FlatShareRoom'
         return net_rent
       when 'AssistedLiving'
