@@ -12,6 +12,7 @@ require 'immobilienscout24/models/api'
 require 'immobilienscout24/models/me'
 require 'immobilienscout24/models/customer'
 require 'immobilienscout24/models/user'
+require 'immobilienscout24/models/entitlement'
 require 'immobilienscout24/models/realtor'
 
 require 'immobilienscout24/models/attachment'
