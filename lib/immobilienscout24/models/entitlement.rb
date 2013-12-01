@@ -18,15 +18,15 @@ module IS24
     end
 
     def entitlement
-      @entitlement ||= @attributes['entitlement']
+      @entitlement ||= @attributes.present? ? @attributes['entitlement'] : nil
     end
 
     def name
-      @name ||= entitlement['name']
+      @name ||= entitlement.present? ? entitlement['name'] : nil
     end
 
     def product_permission
-      @product_permission ||= (entitlement['productPermission'] == 'true')
+      @product_permission ||= (entitlement.present? && entitlement['productPermission'] == 'true')
     end
 
     #

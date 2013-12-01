@@ -18,7 +18,7 @@ module IS24
     end
 
     def available?
-      @attributes['statusCode'] == 'EVALUATIONS_AVAILABLE'
+      @attributes.present? && @attributes['statusCode'] == 'EVALUATIONS_AVAILABLE'
     end
 
     def details_page_url
