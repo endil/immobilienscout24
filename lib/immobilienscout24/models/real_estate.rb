@@ -50,6 +50,10 @@ module IS24
       @address ||= IS24::Address.new(@attributes['address']) if @attributes['address'].present?
     end
 
+    def external_id
+      @external_id ||= @attributes['externalId']
+    end
+
     def group_number
       @group_number ||= @attributes['group_number']
     end
