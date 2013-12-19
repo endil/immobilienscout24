@@ -8,11 +8,11 @@ module IS24
     #
     #
     #
-    
+
     def initialize(attributes={})
       @attributes = attributes
     end
-    
+
     def attributes
       @attributes
     end
@@ -20,23 +20,23 @@ module IS24
     def id
       @id ||= @attributes['@id']
     end
-    
+
     def created_at
       @created_at ||= Time.parse(@attributes['@creation']).utc
     end
-    
+
     def updated_at
       @updated_at ||= Time.parse(@attributes['@modification']).utc
     end
-    
+
     def href
       @href ||= @attributes['@xlink.href']
     end
-    
+
     def imprint_href
       @imprint_href ||= @attributes['imprintLink']['@xlink.href']
     end
-    
+
     def contact_form_type
       @contact_form_type ||= @attributes['@contactFormType']
     end
@@ -48,7 +48,7 @@ module IS24
     def realtor
       @realtor ||= IS24::Realtor.new(@attributes['contactDetails'])
     end
-    
+
     #
     # Class Methods
     # ---------------------------------------------------------------------------------------
@@ -56,10 +56,10 @@ module IS24
     #
     #
     #
-    
+
     def self.offline?(id)
       begin
-        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}", { 'If-None-Match' => '' })
+        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}?reportAsLoaded=true", { 'If-None-Match' => '' })
         case response.code
         when '200', '304'
           return false
@@ -70,10 +70,10 @@ module IS24
         return true
       end
     end
-    
+
     def self.modified?(id, etag=nil)
       begin
-        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}", { 'If-None-Match' => "#{etag}" })
+        response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}?reportAsLoaded=true", { 'If-None-Match' => "#{etag}" })
         return false if response.body.nil? || response.body == ""
 
         case response.code
@@ -88,16 +88,16 @@ module IS24
         return nil
       end
     end
-    
+
     def self.by_id(expose_id, token=nil, secret=nil)
-      response = IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}")
+      response = IS24::Api.new(token, secret).get("search/#{IS24.config.api_version}/expose/#{expose_id}?reportAsLoaded=true")
       if response.present?
         return self.new(response['expose.expose'])
       else
         return nil
       end
     end
-    
+
     def self.contact(expose_id, contact_form_type, params)
       # preserve params order!
       request_body = {
@@ -118,22 +118,22 @@ module IS24
           }
         }.merge(params)
       }
-      
+
       request_body['expose.contactForm']['address'].delete_if { |k, v| v.nil? }
       request_body['expose.contactForm']['address'] = nil if request_body['expose.contactForm']['address'].empty?
       request_body['expose.contactForm'].delete_if { |k, v| v.nil? }
-      
+
       response = IS24::Api.new.post("search/#{IS24.config.api_version}/expose/#{expose_id}/contact", request_body.to_json)
       return response.code != '200' ? response : true
     end
-    
+
     #
     # Protected
     # ---------------------------------------------------------------------------------------
     #
     #
     #
-    # 
+    #
 
     protected
 
@@ -143,7 +143,7 @@ module IS24
     #
     #
     #
-    # 
+    #
 
     private
 
