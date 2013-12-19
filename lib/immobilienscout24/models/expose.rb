@@ -57,6 +57,15 @@ module IS24
     #
     #
 
+    def self.viewed!(id)
+      begin
+        IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}/report/exposeview")
+        return true
+      rescue IS24::Exception::ResourceNotFound
+        return true
+      end
+    end
+
     def self.offline?(id)
       begin
         response = IS24::Api.new.get_request("search/#{IS24.config.api_version}/expose/#{id}?reportAsLoaded=true", { 'If-None-Match' => '' })
