@@ -38,7 +38,7 @@ module IS24
 
     # IS24 API doesn't like: YYYY-MM-DDTHH:MM:SSZ
     def self.iso8601(time)
-      ActiveSupport::TimeZone.new('Europe/Berlin').parse("#{time}").strftime("%Y-%m-%dT%H:%M:%S")
+      time.utc.strftime("%Y-%m-%dT%H:%M:%S")
     end
 
     #

@@ -60,7 +60,7 @@ module IS24
     end
 
     def get(url, options={})
-      decoded_response = decode(get_request(URI.escape(url), options={}))
+      decoded_response = decode(get_request(url, options={}))
       return decoded_response
     end
 
