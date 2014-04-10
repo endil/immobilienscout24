@@ -1,6 +1,6 @@
 module IS24
   class Helper
-    
+
     #
     # Instance Methods
     # ---------------------------------------------------------------------------------------
@@ -8,7 +8,7 @@ module IS24
     #
     #
     #
-    
+
     # http://rest.immobilienscout24.de/restapi/api/gis/v1.0/?_wadl&_schema&_file=classpath:/de/is24/common/webservice/xml/common-1.0.xsd
     REAL_ESTATE_TYPES = {
       'APARTMENT_RENT' => 'Mietwohnung',
@@ -33,23 +33,21 @@ module IS24
       'COMPULSORY_AUCTION' => 'Zwangsversteigerung',
       'SHORT_TERM_ACCOMMODATION' => 'Wohnen auf Zeit (WAZ)'
     }
-    
+
     # RealEstateState
-    
+
     # IS24 API doesn't like: YYYY-MM-DDTHH:MM:SSZ
     def self.iso8601(time)
-      time.utc.strftime("%Y-%m-%dT%H:%M:%S")
+      ActiveSupport::TimeZone.new('Europe/Berlin').parse("#{time}").strftime("%Y-%m-%dT%H:%M:%S")
     end
-    
-    
-    
+
     #
     # Protected
     # ---------------------------------------------------------------------------------------
     #
     #
     #
-    # 
+    #
 
     protected
 
@@ -59,9 +57,9 @@ module IS24
     #
     #
     #
-    # 
+    #
 
     private
-    
+
   end
 end

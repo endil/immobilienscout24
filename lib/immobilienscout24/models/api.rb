@@ -99,7 +99,11 @@ module IS24
 
     def get_pages(url, options={})
       results = Array.new
-      response = get(url, options)
+      begin
+        response = get(url, options)
+      rescue IS24::Exception::CommonResourceNotFound
+      end
+
       return results if response.nil? || response == ''
 
       if response['common.strictList'].present?
