@@ -18,55 +18,43 @@ module IS24
     end
 
     def available?
-      @attributes.present? && @attributes['statusCode'] == 'EVALUATIONS_AVAILABLE'
+      @attributes.present? && @attributes['status'] == 'OK'
     end
 
     def details_page_url
-      @details_page_url ||= @attributes['detailedInfo']['realtorDetailsPageUrl']
+      @details_page_url ||= @attributes['realtorDirectory']['dpurl']
     end
 
     def details_page_url_mobile
-      @details_page_url_mobile ||= @attributes['detailedInfo']['mobileDetailsPageUrl']
+      @details_page_url_mobile ||= @attributes['realtorDirectory']['mdpurl']
     end
 
-    def has_premium_badge?
-      @has_premium_badge ||= @attributes['detailedInfo']['hasPremiumBadge']
+    def has_badge?
+      @attributes['realtor']['bpu'].present?
     end
 
-    def premium_badge_url
-      @premium_badge_url ||= has_premium_badge? ? @attributes['detailedInfo']['premiumBadgeUrl'] : ''
+    def badge_picture_url
+      @badge_picture_url ||= has_badge? ? @attributes['realtor']['bpu'] : ''
     end
 
-    def overall_average_evaluation
-      @overall_average_evaluation ||= @attributes['detailedInfo']['overallAverageEvaluation']
+    def evaluation_switch_status
+      @evaluation_switch_status ||= @attributes['realtor']['ess']
     end
 
-    def overall_number_of_evaluations
-      @overall_number_of_evaluations ||= @attributes['detailedInfo']['overallNumberOfEvaluations']
+    def evaluations_last_year
+      @evaluations_last_year ||= @attributes['evaluations']['MONTHS_12']
     end
 
-    def seeker_evaluations_available?
-      @attributes['detailedInfo']['seekerEvaluations']['statusCode'] == 'EVALUATIONS_AVAILABLE'
+    def evaluations_last_18_months
+      @evaluations_last_18_months ||= @attributes['evaluations']['MONTHS_18']
     end
 
-    def seeker_evaluations_overall_average_evaluation
-      @seeker_evaluations_overall_average_evaluation ||= @attributes['detailedInfo']['seekerEvaluations']['seekerOverallAverageEvaluation']
+    def evaluations_last_two_years
+      @evaluations_last_two_years ||= @attributes['evaluations']['MONTHS_24']
     end
 
-    def seeker_evaluations_overall_number_of_evaluations
-      @seeker_evaluations_overall_number_of_evaluations ||= @attributes['detailedInfo']['seekerEvaluations']['seekerOverallNumberOfEvaluations']
-    end
-
-    def owner_evaluations_available?
-      @attributes['detailedInfo']['ownerEvaluations']['statusCode'] == 'EVALUATIONS_AVAILABLE'
-    end
-
-    def owner_evaluations_overall_average_evaluation
-      @owner_evaluations_overall_average_evaluation ||= @attributes['detailedInfo']['ownerEvaluations']['ownerOverallAverageEvaluation']
-    end
-
-    def owner_evaluations_overall_number_of_evaluations
-      @owner_evaluations_overall_number_of_evaluations ||= @attributes['detailedInfo']['ownerEvaluations']['ownerOverallNumberOfEvaluations']
+    def evaluations_overall
+      @evaluations_overall ||= @attributes['evaluations']['ALL']
     end
 
     #
@@ -77,8 +65,19 @@ module IS24
     #
     #
 
-    def self.by_company_wide_id(company_wide_id)
-      return self.new(IS24::Api.new.get("evaluation/v1.0/realtor/#{company_wide_id}/evaluationinfo/"))
+    def self.by_company_wide_id(company_wide_id, encryption_key)
+      return self.new(IS24::Api.new.get("evaluation/v4.0/realtor/#{self.encrypted_company_wide_id(company_wide_id, encryption_key)}/evaluationinfo/"))
+    end
+
+    def self.encrypted_company_wide_id(company_wide_id, encryption_key)
+      cipher = OpenSSL::Cipher::Cipher.new('AES-128-ECB')
+      cipher.encrypt
+      cipher.key = Base64.decode64(encryption_key)
+
+      crypt = cipher.update(company_wide_id)
+      crypt << cipher.final
+
+      return crypt.unpack('H*').first
     end
 
     #
