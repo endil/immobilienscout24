@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module IS24
   class Api
 
@@ -91,6 +92,7 @@ module IS24
 
       if IS24.config.enable_logging
         request_finished_at = Time.now
+        Rails.logger.info "IS24::Api.get: Response body: #{response.body}"
         Rails.logger.info "IS24::Api.get: Finished at #{request_finished_at.iso8601} in #{((request_finished_at - request_startet_at) * 1000).to_i} milliseconds\n\n"
       end
 

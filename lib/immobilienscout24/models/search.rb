@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module IS24
   class Search < Api
 

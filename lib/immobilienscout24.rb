@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Include external dependencies
 require 'oauth'
 require 'multi_json'

@@ -1,6 +1,7 @@
+# -*- encoding : utf-8 -*-
 module IS24
   module Exception
-    
+
     ERROR_IDENTIFIERS = %w(
       ERROR_COMMON_AUTHENTICATION_REQUIRED
       ERROR_COMMON_AUTHENTICATION_OAUTH_NONCE_EXPIRED
@@ -30,7 +31,7 @@ module IS24
     def self.translate_into_class_name(error_identifier)
       return "#{error_identifier.gsub('ERROR_','').tableize.classify}"
     end
-    
+
     ERROR_IDENTIFIERS.each do |error_identifier|
       const_set(self.translate_into_class_name(error_identifier), Class.new(StandardError))
     end
