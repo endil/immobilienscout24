@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# encoding: UTF-8
 # Taken from: http://blog.confabulus.com/2008/12/30/making-your-plugin-or-gem-configurable/
 module IS24
 

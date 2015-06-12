@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
   s.executables   = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
-  
+
   s.add_dependency 'oauth', '~> 0.4'
   s.add_dependency 'multi_json', '~> 1.3'
+  s.add_dependency 'addressable', '~> 2.3'
 end
