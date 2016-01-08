@@ -67,6 +67,9 @@ module IS24
     end
 
     def self.by_username(username)
+      user_details = IS24::Api.new.get("account/#{IS24.config.api_version}/user/#{username}")
+      return unless user_details.present?
+
       return self.new(IS24::Api.new.get("account/#{IS24.config.api_version}/user/#{username}")['user.user'])
     end
 
