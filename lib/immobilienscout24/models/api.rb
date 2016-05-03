@@ -88,7 +88,7 @@ module IS24
         Rails.logger.info "IS24::Api.get: Requested: #{IS24.config.oauth_site}/restapi/api/#{url}"
       end
 
-      response = access_token.get(Addressable::URI.escape("/restapi/api/#{url}"), headers(options))
+      response = access_token.get(URI.escape("/restapi/api/#{url}"), headers(options))
 
       if IS24.config.enable_logging
         request_finished_at = Time.now
